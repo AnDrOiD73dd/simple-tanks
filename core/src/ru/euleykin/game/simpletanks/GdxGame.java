@@ -47,10 +47,12 @@ public class GdxGame extends ApplicationAdapter {
 
     private void update(float dt) {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            playerTank.getTurretSprite().rotate(1);
+            if (playerTank.getTurretSprite().getRotation() < 90)
+                playerTank.getTurretSprite().rotate(1);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            playerTank.getTurretSprite().rotate(-1);
+            if (playerTank.getTurretSprite().getRotation() > 0)
+                playerTank.getTurretSprite().rotate(-1);
         }
 	}
 
