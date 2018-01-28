@@ -7,8 +7,8 @@ public class Tank extends Player implements Movable, Renderable {
 
     private Vector2 velocity;
 
-    public Tank(float posX, float posY, String texturePath) {
-        super(posX, posY, texturePath);
+    public Tank(float posX, float posY, String tankTexturePath) {
+        super(posX, posY, tankTexturePath);
         this.velocity = new Vector2(0.0f, 0.0f);
     }
 

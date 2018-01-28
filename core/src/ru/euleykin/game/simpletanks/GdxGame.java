@@ -12,7 +12,7 @@ public class GdxGame extends ApplicationAdapter {
 
 	private SpriteBatch batch;
 	private Grass grass;
-	private Tank playerTank;
+	private TankGray3Turret2 playerTank;
 	
 	@Override
 	public void create () {
@@ -23,7 +23,7 @@ public class GdxGame extends ApplicationAdapter {
 
 	private void initPlayerTank() {
 	    float centerX = WINDOW_WIDTH / 2;
-	    playerTank = new Tank(centerX, (float) grass.getTexture().getHeight() + 35, "tank_grey_3_without_turret.png");
+	    playerTank = new TankGray3Turret2(centerX, (float) grass.getTexture().getHeight() + 35);
     }
 
 	@Override
