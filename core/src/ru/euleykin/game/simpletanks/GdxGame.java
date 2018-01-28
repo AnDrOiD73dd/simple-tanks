@@ -61,7 +61,7 @@ public class GdxGame extends ApplicationAdapter {
 	    if (WINDOW_WIDTH/grass.getTexture().getWidth() > 0)
 	        count++;
         for (int i = 0; i < count; i++) {
-            batch.draw(grass.getTexture(), i * 100, 0);
+            batch.draw(grass.getTexture(), i * grass.getTexture().getWidth(), 0);
         }
     }
 	
