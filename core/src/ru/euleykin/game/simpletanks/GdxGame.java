@@ -2,6 +2,7 @@ package ru.euleykin.game.simpletanks;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -22,8 +23,9 @@ public class GdxGame extends ApplicationAdapter {
     }
 
 	private void initPlayerTank() {
-	    float centerX = WINDOW_WIDTH / 2;
-	    playerTank = new TankGray3Turret2(centerX, (float) grass.getTexture().getHeight() + 35);
+//	    float centerX = WINDOW_WIDTH / 2;
+//	    playerTank = new TankGray3Turret2(centerX, (float) grass.getTexture().getHeight() + 35);
+        playerTank = new TankGray3Turret2(50, (float) grass.getTexture().getHeight() + 35, 100.f, 100.0f);
     }
 
 	@Override
@@ -43,8 +45,13 @@ public class GdxGame extends ApplicationAdapter {
 	    playerTank.render(batch);
     }
 
-    public void update(float dt) {
-
+    private void update(float dt) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            playerTank.getTurretSprite().rotate(1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            playerTank.getTurretSprite().rotate(-1);
+        }
 	}
 
 	private void drawGrass() {
@@ -60,6 +67,7 @@ public class GdxGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		playerTank.getTexture().dispose();
+		playerTank.getTurret().getTexture().dispose();
 		grass.getTexture().dispose();
 	}
 }
