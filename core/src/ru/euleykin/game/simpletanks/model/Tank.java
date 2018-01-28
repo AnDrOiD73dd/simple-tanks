@@ -2,9 +2,6 @@ package ru.euleykin.game.simpletanks.model;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import ru.euleykin.game.simpletanks.model.Movable;
-import ru.euleykin.game.simpletanks.model.Player;
-import ru.euleykin.game.simpletanks.model.Renderable;
 
 public class Tank extends Player implements Movable, Renderable {
 
