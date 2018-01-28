@@ -1,4 +1,4 @@
-package ru.euleykin.game.simpletanks;
+package ru.euleykin.game.simpletanks.model;
 
 public interface Movable {
 

@@ -1,11 +1,12 @@
-package ru.euleykin.game.simpletanks;
+package ru.euleykin.game.simpletanks.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import ru.euleykin.game.simpletanks.model.Renderable;
 
-public class Packet implements Renderable{
+public class Packet implements Renderable {
 
     private Vector2 position;
     private Vector2 velocity;

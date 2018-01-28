@@ -1,6 +1,7 @@
 package ru.euleykin.game.simpletanks;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import ru.euleykin.game.simpletanks.model.TankWithTurret;
 
 public class TankGray3Turret2 extends TankWithTurret {
 
