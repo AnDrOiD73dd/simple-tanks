@@ -7,4 +7,5 @@ public abstract class Player {
 
     protected Vector2 position;
     protected Texture texture;
+    protected Vector2 center;
 }
