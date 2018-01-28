@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import ru.euleykin.game.simpletanks.model.Bullet;
 
 public class GdxGame extends ApplicationAdapter {
 
@@ -14,12 +15,18 @@ public class GdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Grass grass;
 	private TankGray3Turret2 playerTank;
+	private Bullet5 bullet;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
         grass = new Grass();
         initPlayerTank();
+        bullet = new Bullet5(
+//                playerTank.getTurretSprite().getX() + playerTank.getTurretSprite().getWidth(),
+                playerTank.getTurretSprite().getX(),
+                playerTank.getTurretSprite().getY(),
+                100, 100);
     }
 
 	private void initPlayerTank() {
@@ -36,23 +43,26 @@ public class GdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
         drawGrass();
-        drawPlayerTank();
+        bullet.render(batch);
+        playerTank.render(batch);
 		batch.end();
 	}
 
-    private void drawPlayerTank() {
-//	    batch.draw(playerTank.getTexture(), playerTank.getPosition().x, playerTank.getPosition().y);
-	    playerTank.render(batch);
-    }
-
     private void update(float dt) {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (playerTank.getTurretSprite().getRotation() < 90)
+            if (playerTank.getTurretSprite().getRotation() < 90) {
                 playerTank.getTurretSprite().rotate(1);
+                bullet.getSprite().rotate(1);
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            if (playerTank.getTurretSprite().getRotation() > 0)
+            if (playerTank.getTurretSprite().getRotation() > -20) {
                 playerTank.getTurretSprite().rotate(-1);
+                bullet.getSprite().rotate(-1);
+            }
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+
         }
 	}
 
@@ -67,9 +77,10 @@ public class GdxGame extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
+        grass.getTexture().dispose();
 		playerTank.getTexture().dispose();
 		playerTank.getTurret().getTexture().dispose();
-		grass.getTexture().dispose();
+		bullet.getTexture().dispose();
+        batch.dispose();
 	}
 }

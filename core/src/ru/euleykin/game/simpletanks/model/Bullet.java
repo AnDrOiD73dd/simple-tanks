@@ -5,14 +5,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Packet implements Renderable {
+public class Bullet implements Renderable {
 
     private Vector2 position;
     private Vector2 velocity;
     private Texture texture;
     private Sprite sprite;
 
-    public Packet(float posX, float posY, float velocityX, float velocityY, String texturePath) {
+    public Bullet(float posX, float posY, float velocityX, float velocityY, String texturePath) {
         this.position = new Vector2(posX, posY);
         this.velocity = new Vector2(velocityX, velocityY);
         this.texture = new Texture(texturePath);
