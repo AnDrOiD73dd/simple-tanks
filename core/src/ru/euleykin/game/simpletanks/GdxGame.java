@@ -23,7 +23,7 @@ public class GdxGame extends ApplicationAdapter {
 
 	private void initPlayerTank() {
 	    float centerX = WINDOW_WIDTH / 2;
-	    playerTank = new Tank(centerX, (float) grass.getTexture().getHeight(), "tanks_tankGrey3_without_turret.png");
+	    playerTank = new Tank(centerX, (float) grass.getTexture().getHeight() + 35, "tank_grey_3_without_turret.png");
     }
 
 	@Override
@@ -59,5 +59,7 @@ public class GdxGame extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		playerTank.getTexture().dispose();
+		grass.getTexture().dispose();
 	}
 }
