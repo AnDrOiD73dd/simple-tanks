@@ -3,7 +3,6 @@ package ru.euleykin.game.simpletanks;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GdxGame extends ApplicationAdapter {
@@ -13,12 +12,19 @@ public class GdxGame extends ApplicationAdapter {
 
 	private SpriteBatch batch;
 	private Grass grass;
+	private Tank playerTank;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		grass = new Grass();
-	}
+        grass = new Grass();
+        initPlayerTank();
+    }
+
+	private void initPlayerTank() {
+	    float centerX = WINDOW_WIDTH / 2;
+	    playerTank = new Tank(centerX, (float) grass.getTexture().getHeight(), "tanks_tankGrey3_without_turret.png");
+    }
 
 	@Override
 	public void render () {
@@ -27,12 +33,17 @@ public class GdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor((float)89/255, (float)182/255, (float)255/255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-//		batch.draw(img, 0, 0);
         drawGrass();
+        drawPlayerTank();
 		batch.end();
 	}
 
-	public void update(float dt) {
+    private void drawPlayerTank() {
+//	    batch.draw(playerTank.getTexture(), playerTank.getPosition().x, playerTank.getPosition().y);
+	    playerTank.render(batch);
+    }
+
+    public void update(float dt) {
 
 	}
 

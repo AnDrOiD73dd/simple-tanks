@@ -1,9 +1,10 @@
 package ru.euleykin.game.simpletanks;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Tank extends Player implements Movable {
+public class Tank extends Player implements Movable, Renderable {
 
     private Vector2 velocity;
 
@@ -22,5 +23,10 @@ public class Tank extends Player implements Movable {
     @Override
     public void move() {
         position.add(velocity);
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        batch.draw(texture, position.x - center.x, position.y - center.y);
     }
 }
