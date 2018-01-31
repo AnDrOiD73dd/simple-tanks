@@ -3,6 +3,7 @@ package com.tanks.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,6 +22,7 @@ public class Tank {
     private float minPower;
     private float maxPower;
     private Circle hitArea;
+    private BitmapFont font;
 
     public Tank(TanksGame game, Vector2 position) {
         this.game = game;
@@ -34,7 +36,8 @@ public class Tank {
         this.power = 0.0f;
         this.minPower = 0.25f;
         this.maxPower = 2.2f;
-        this.hitArea = new Circle(position.x + 64, position.y + 64, 32);
+        this.hitArea = new Circle(position.x + 64, position.y + 64, 30);
+        this.font = new BitmapFont();
     }
 
     public Texture getTextureBase() {
@@ -52,6 +55,7 @@ public class Tank {
     public void render(SpriteBatch batch) {
         batch.draw(textureTurret, weaponPosition.x, weaponPosition.y, 12, 16, 64, 32, 1, 1, turretAngle, 0, 0, 64, 32, false, false);
         batch.draw(textureBase, position.x, position.y);
+        font.draw(batch, String.valueOf(hp), position.x + textureBase.getWidth()/2, position.y + textureBase.getHeight());
     }
 
     public void rotateTurret(int n, float dt) {
@@ -107,6 +111,5 @@ public class Tank {
 
     public void takeDamage(int damage) {
         this.hp -= damage;
-        System.out.println("HP = " + this.hp);
     }
 }

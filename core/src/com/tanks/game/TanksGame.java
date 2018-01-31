@@ -67,12 +67,17 @@ public class TanksGame extends ApplicationAdapter {
                 float bx = b[i].getPosition().x;
                 float by = b[i].getPosition().y;
                 // Проверка столкновения с танком
+                // Почему-то не сработал такой способ
 //                if (player.getHitArea().contains(b[i].getPosition())) {
 //                    b[i].deactivate();
 //                    player.takeDamage(10);
 //                }
-                if (bx >= px && bx <= px + player.getTextureBase().getWidth()
-                        && by <= py + player.getTextureBase().getHeight() - 20 && by > py) {
+                // Ствол пушки коротковат, поэтому возникли ситуации, когда появляется пуля - считается что она уже попала в танк
+                // Поэтому появились значения 10 и 20, которые позволяют сместить это к минимуму, но мы жертвуем тем, что
+                // урон по краям танка не засчитывается
+                // Вывод: нужно заставить работать первый способ или взять ствол подлинее
+                if (bx >= px + 10 && bx <= px + player.getTextureBase().getWidth() - 10
+                        && by <= py + player.getTextureBase().getHeight() - 20 && by > py + 20) {
                     b[i].deactivate();
                     player.takeDamage(10);
                 }
