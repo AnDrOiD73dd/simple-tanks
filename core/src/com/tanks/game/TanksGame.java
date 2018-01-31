@@ -33,7 +33,7 @@ public class TanksGame extends ApplicationAdapter {
         batch = new SpriteBatch();
         textureBackground = new Texture("background.png");
         map = new Map();
-        player = new Tank(this, new Vector2(0, 380));
+        player = new Tank(this, new Vector2(200, 380));
         bulletEmitter = new BulletEmitter();
     }
 
@@ -60,11 +60,26 @@ public class TanksGame extends ApplicationAdapter {
 
     public void checkCollisions() {
         Bullet[] b = bulletEmitter.getBullets();
+        float px = player.getPosition().x;
+        float py = player.getPosition().y;
         for (int i = 0; i < b.length; i++) {
             if (b[i].isActive()) {
-                if (map.isGround(b[i].getPosition().x, b[i].getPosition().y)) {
+                float bx = b[i].getPosition().x;
+                float by = b[i].getPosition().y;
+                // Проверка столкновения с танком
+//                if (player.getHitArea().contains(b[i].getPosition())) {
+//                    b[i].deactivate();
+//                    player.takeDamage(10);
+//                }
+                if (bx >= px && bx <= px + player.getTextureBase().getWidth() - 20
+                        && by <= py + player.getTextureBase().getHeight() - 20 && by > py) {
                     b[i].deactivate();
-                    map.clearGround(b[i].getPosition().x, b[i].getPosition().y, 8);
+                    player.takeDamage(10);
+                }
+                // Проверка столкновения с землей
+                if (map.isGround(bx, by)) {
+                    b[i].deactivate();
+                    map.clearGround(bx, by, 8);
                 }
             }
         }

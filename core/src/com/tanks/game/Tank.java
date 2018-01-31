@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -19,6 +20,7 @@ public class Tank {
     private float power;
     private float minPower;
     private float maxPower;
+    private Circle hitArea;
 
     public Tank(TanksGame game, Vector2 position) {
         this.game = game;
@@ -32,6 +34,19 @@ public class Tank {
         this.power = 0.0f;
         this.minPower = 0.25f;
         this.maxPower = 2.2f;
+        this.hitArea = new Circle(position.x + 64, position.y + 64, 32);
+    }
+
+    public Texture getTextureBase() {
+        return textureBase;
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public Circle getHitArea() {
+        return hitArea;
     }
 
     public void render(SpriteBatch batch) {
@@ -54,16 +69,20 @@ public class Tank {
             position.y -= 100.0f * dt;
             weaponPosition.set(position).add(20, 26);
         }
-        // 
+        // По удержанию пробела накапливаем мощность
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             power += dt;
-        } else {
+        } else {  // <-- выстрел, когда отпустили пробел
             if (power > minPower) {
                 power = MathUtils.clamp(power, minPower, maxPower);
                 fire();
                 power = 0.0f;
             }
         }
+
+        // Перемещаем hitArea вместе с позицией танка
+        hitArea.x = position.x;
+        hitArea.y = position.y;
     }
 
     private void fire() {
@@ -84,5 +103,10 @@ public class Tank {
             }
         }
         return false;
+    }
+
+    public void takeDamage(int damage) {
+        this.hp -= damage;
+        System.out.println("HP = " + this.hp);
     }
 }
