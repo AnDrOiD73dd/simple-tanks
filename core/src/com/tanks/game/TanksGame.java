@@ -71,7 +71,7 @@ public class TanksGame extends ApplicationAdapter {
 //                    b[i].deactivate();
 //                    player.takeDamage(10);
 //                }
-                if (bx >= px && bx <= px + player.getTextureBase().getWidth() - 20
+                if (bx >= px && bx <= px + player.getTextureBase().getWidth()
                         && by <= py + player.getTextureBase().getHeight() - 20 && by > py) {
                     b[i].deactivate();
                     player.takeDamage(10);
