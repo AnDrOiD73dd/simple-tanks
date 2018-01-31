@@ -1,14 +1,14 @@
-package ru.euleykin.game.simpletanks.desktop;
+package com.tanks.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import ru.euleykin.game.simpletanks.GdxGame;
+import com.tanks.game.TanksGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = GdxGame.WINDOW_WIDTH;
-		config.height = GdxGame.WINDOW_HEIGHT;
-		new LwjglApplication(new GdxGame(), config);
+		config.width = 1280;
+		config.height = 720;
+		new LwjglApplication(new TanksGame(), config);
 	}
 }

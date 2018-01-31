@@ -19,8 +19,8 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "simple-2d-tanks"
-        gdxVersion = '1.9.8'
+        appName = "TanksGame"
+        gdxVersion = '1.9.7'
         roboVMVersion = '2.3.1'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
