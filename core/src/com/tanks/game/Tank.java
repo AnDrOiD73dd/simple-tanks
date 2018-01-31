@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Tank {
@@ -15,6 +16,9 @@ public class Tank {
     private float turretAngle;
     private int hp;
     private int maxHp;
+    private float power;
+    private float minPower;
+    private float maxPower;
 
     public Tank(TanksGame game, Vector2 position) {
         this.game = game;
@@ -25,6 +29,9 @@ public class Tank {
         this.turretAngle = 0.0f;
         this.maxHp = 100;
         this.hp = this.maxHp;
+        this.power = 0.0f;
+        this.minPower = 0.25f;
+        this.maxPower = 2.2f;
     }
 
     public void render(SpriteBatch batch) {
@@ -47,17 +54,27 @@ public class Tank {
             position.y -= 100.0f * dt;
             weaponPosition.set(position).add(20, 26);
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            float ammoPosX = weaponPosition.x + 12 + 28 * (float) Math.cos(Math.toRadians(turretAngle));
-            float ammoPosY = weaponPosition.y + 16 + 28 * (float) Math.sin(Math.toRadians(turretAngle));
-
-            float power = 400.0f;
-            float ammoVelX = power * (float) Math.cos(Math.toRadians(turretAngle));
-            float ammoVelY = power * (float) Math.sin(Math.toRadians(turretAngle));
-
-            game.getBulletEmitter().setup(ammoPosX, ammoPosY, ammoVelX, ammoVelY);
+        // 
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            power += dt;
+        } else {
+            if (power > minPower) {
+                power = MathUtils.clamp(power, minPower, maxPower);
+                fire();
+                power = 0.0f;
+            }
         }
+    }
+
+    private void fire() {
+        float ammoPosX = weaponPosition.x + 12 + 28 * (float) Math.cos(Math.toRadians(turretAngle));
+        float ammoPosY = weaponPosition.y + 16 + 28 * (float) Math.sin(Math.toRadians(turretAngle));
+
+        float power = 400.0f * this.power;
+        float ammoVelX = power * (float) Math.cos(Math.toRadians(turretAngle));
+        float ammoVelY = power * (float) Math.sin(Math.toRadians(turretAngle));
+
+        game.getBulletEmitter().setup(ammoPosX, ammoPosY, ammoVelX, ammoVelY);
     }
 
     public boolean checkOnGround() {

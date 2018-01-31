@@ -33,7 +33,7 @@ public class TanksGame extends ApplicationAdapter {
         batch = new SpriteBatch();
         textureBackground = new Texture("background.png");
         map = new Map();
-        player = new Tank(this, new Vector2(400, 380));
+        player = new Tank(this, new Vector2(0, 380));
         bulletEmitter = new BulletEmitter();
     }
 
