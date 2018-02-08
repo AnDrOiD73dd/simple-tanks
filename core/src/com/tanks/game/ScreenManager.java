@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 
 public class ScreenManager {
+
     public enum ScreenType {
         MENU, GAME;
     }
@@ -17,7 +18,7 @@ public class ScreenManager {
     private TanksGame tanksGame;
     private Viewport viewport;
     private GameScreen gameScreen;
-//    private MenuScreen menuScreen;
+    private MenuScreen menuScreen;
 //    private LoadingScreen loadingScreen;
 //    private Screen targetScreen;
 
@@ -35,7 +36,6 @@ public class ScreenManager {
     public void init(TanksGame tanksGame, SpriteBatch batch) {
         this.tanksGame = tanksGame;
         this.gameScreen = new GameScreen(batch);
-//        this.menuScreen = new MenuScreen(batch);
 //        this.loadingScreen = new LoadingScreen(batch);
         this.viewport = new FitViewport(VIEW_WIDTH, VIEW_HEIGHT);
         this.viewport.apply();
@@ -57,16 +57,17 @@ public class ScreenManager {
 
     public void switchScreen(ScreenType type) {
         Screen currentScreen = tanksGame.getScreen();
-        Assets.getInstance().clear();
         if (currentScreen != null) {
             currentScreen.dispose();
         }
+//        Assets.getInstance().clear();
 //        rpgGame.setScreen(loadingScreen);
         switch (type) {
-//            case MENU:
-//                currentScreen = menuScreen;
-//                Assets.getInstance().loadAssets(ScreenType.MENU);
-//                break;
+            case MENU:
+                if (menuScreen == null) menuScreen = new MenuScreen(tanksGame);
+                currentScreen = menuScreen;
+                Assets.getInstance().loadAssets(ScreenType.MENU);
+                break;
             case GAME:
                 currentScreen = gameScreen;
                 Assets.getInstance().loadAssets(ScreenType.GAME);

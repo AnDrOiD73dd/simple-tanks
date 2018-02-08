@@ -146,7 +146,7 @@ public class GameScreen implements Screen {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).renderHUD(batch, font);
         }
-        font.draw(batch, "Hello", 200, 600);
+//        font.draw(batch, "Hello", 200, 600);
         batch.end();
         shapeRenderer.begin();
         for (int i = 0; i < players.size(); i++) {

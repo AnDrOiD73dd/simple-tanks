@@ -2,6 +2,7 @@ package com.tanks.game;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
  * Created by FlameXander on 09.01.2018.
@@ -20,6 +22,12 @@ public class Assets {
 
     private AssetManager assetManager;
     private TextureAtlas atlas;
+
+    public Skin getMenuSkin() {
+        return menuSkin;
+    }
+
+    private Skin menuSkin;
 
     public TextureAtlas getAtlas() {
         return atlas;
@@ -39,11 +47,13 @@ public class Assets {
 
     public void loadAssets(ScreenManager.ScreenType type) {
         switch (type) {
-//            case MENU:
-//                createStandardFont(48);
-//                assetManager.load("background.png", Texture.class);
-//                assetManager.load("mainPack.pack", TextureAtlas.class);
-//                break;
+            case MENU:
+                assetManager.load("MainPack.pack", TextureAtlas.class);
+                createStandardFont(12);
+                createStandardFont(48);
+                assetManager.finishLoading();
+                atlas = assetManager.get("MainPack.pack", TextureAtlas.class);
+                break;
             case GAME:
                 assetManager.load("MainPack.pack", TextureAtlas.class);
                 createStandardFont(12);
