@@ -60,7 +60,7 @@ public class ScreenManager {
         if (currentScreen != null) {
             currentScreen.dispose();
         }
-//        Assets.getInstance().clear();
+        Assets.getInstance().clear();
 //        rpgGame.setScreen(loadingScreen);
         switch (type) {
             case MENU:
