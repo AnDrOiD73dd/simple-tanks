@@ -23,12 +23,6 @@ public class Assets {
     private AssetManager assetManager;
     private TextureAtlas atlas;
 
-    public Skin getMenuSkin() {
-        return menuSkin;
-    }
-
-    private Skin menuSkin;
-
     public TextureAtlas getAtlas() {
         return atlas;
     }
@@ -49,7 +43,6 @@ public class Assets {
         switch (type) {
             case MENU:
                 assetManager.load("MainPack.pack", TextureAtlas.class);
-                createStandardFont(12);
                 createStandardFont(48);
                 assetManager.finishLoading();
                 atlas = assetManager.get("MainPack.pack", TextureAtlas.class);

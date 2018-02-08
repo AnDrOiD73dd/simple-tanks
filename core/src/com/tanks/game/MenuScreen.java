@@ -14,7 +14,7 @@ public class MenuScreen implements Screen {
     private TanksGame parent;
     private Stage stage;
     private Skin skin;
-    private BitmapFont font;
+    private BitmapFont font48;
     private TextureAtlas.AtlasRegion textureBackground;
 
     public MenuScreen(TanksGame tanksGame) {
@@ -25,38 +25,17 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-        font = Assets.getInstance().getAssetManager().get("zorque48.ttf", BitmapFont.class);
+        font48 = Assets.getInstance().getAssetManager().get("zorque48.ttf", BitmapFont.class);
         textureBackground = Assets.getInstance().getAtlas().findRegion("background");
-
-//        parent.assMan.queueAddSkin();
-//        parent.assMan.manager.finishLoading();
-//        skin = Assets.getInstance().getMenuSkin();
-//        skin = new Skin(Gdx.files.internal("menuSkin.json"));
-//
-//        Gdx.input.setInputProcessor(stage);
-//        // Create a table that fills the screen. Everything else will go inside this table.
-//        Table table = new Table();
-//        table.setFillParent(true);
-//        table.setDebug(true);
-//        stage.addActor(table);
-//
-//
-//        //create buttons
-//        TextButton newGame = new TextButton("New Game", skin);
-//        TextButton exit = new TextButton("Exit", skin);
-//
-//        //add buttons to table
-//        table.add(newGame).fillX().uniformX();
-//        table.row().pad(10, 0, 10, 0);
-//        table.add(exit).fillX().uniformX();
     }
 
     @Override
     public void render(float delta) {
+
         parent.getBatch().begin();
         parent.getBatch().draw(textureBackground, 0, 0);
-        parent.getFont48().draw(parent.getBatch(), "New Game", Gdx.graphics.getWidth()/2-100, Gdx.graphics.getHeight()/2 + 100);
-        parent.getFont48().draw(parent.getBatch(), "Quit", Gdx.graphics.getWidth()/2-50, Gdx.graphics.getHeight()/2);
+        font48.draw(parent.getBatch(), "New Game", Gdx.graphics.getWidth()/2-100, Gdx.graphics.getHeight()/2 + 100);
+        font48.draw(parent.getBatch(), "Quit", Gdx.graphics.getWidth()/2-50, Gdx.graphics.getHeight()/2);
         parent.getBatch().end();
 
         if (Gdx.input.justTouched()) {
