@@ -2,7 +2,6 @@ package com.tanks.game;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
  * Created by FlameXander on 09.01.2018.
@@ -42,14 +40,16 @@ public class Assets {
     public void loadAssets(ScreenManager.ScreenType type) {
         switch (type) {
             case MENU:
+                createStandardFont(32);
+                createStandardFont(96);
                 assetManager.load("MainPack.pack", TextureAtlas.class);
-                createStandardFont(48);
                 assetManager.finishLoading();
                 atlas = assetManager.get("MainPack.pack", TextureAtlas.class);
                 break;
             case GAME:
                 assetManager.load("MainPack.pack", TextureAtlas.class);
                 createStandardFont(12);
+                createStandardFont(32);
                 assetManager.finishLoading();
                 atlas = assetManager.get("MainPack.pack", TextureAtlas.class);
                 break;

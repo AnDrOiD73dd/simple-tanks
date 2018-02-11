@@ -2,89 +2,106 @@ package com.tanks.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.RegionInfluencer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MenuScreen implements Screen {
+    private SpriteBatch batch;
 
-    private TanksGame parent;
+    private BitmapFont font32;
+    private BitmapFont font96;
+
+    private TextureRegion textureRegionBackground;
+
     private Stage stage;
     private Skin skin;
-    private BitmapFont font48;
-    private TextureAtlas.AtlasRegion textureBackground;
 
-    public MenuScreen(TanksGame tanksGame) {
-        parent = tanksGame;
-        /// create stage and set it as input processor
-        stage = new Stage(new ScreenViewport());
+    public MenuScreen(SpriteBatch batch) {
+        this.batch = batch;
     }
 
     @Override
     public void show() {
-        font48 = Assets.getInstance().getAssetManager().get("zorque48.ttf", BitmapFont.class);
-        textureBackground = Assets.getInstance().getAtlas().findRegion("background");
+        textureRegionBackground = Assets.getInstance().getAtlas().findRegion("background");
+        font32 = Assets.getInstance().getAssetManager().get("zorque32.ttf", BitmapFont.class);
+        font96 = Assets.getInstance().getAssetManager().get("zorque96.ttf", BitmapFont.class);
+        createGUI();
+    }
+
+    public void createGUI() {
+        stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
+        skin = new Skin(Assets.getInstance().getAtlas());
+        Gdx.input.setInputProcessor(stage);
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.getDrawable("menuBtn");
+        textButtonStyle.font = font32;
+        skin.add("tbs", textButtonStyle);
+
+        TextButton btnNewGame = new TextButton("START", skin, "tbs");
+        TextButton btnExitGame = new TextButton("EXIT", skin, "tbs");
+        btnNewGame.setPosition(520, 120);
+        btnExitGame.setPosition(520, 20);
+        stage.addActor(btnNewGame);
+        stage.addActor(btnExitGame);
+        btnNewGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.GAME);
+            }
+        });
+        btnExitGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
     }
 
     @Override
     public void render(float delta) {
-
-        parent.getBatch().begin();
-        parent.getBatch().draw(textureBackground, 0, 0);
-        font48.draw(parent.getBatch(), "New Game", Gdx.graphics.getWidth()/2-100, Gdx.graphics.getHeight()/2 + 100);
-        font48.draw(parent.getBatch(), "Quit", Gdx.graphics.getWidth()/2-50, Gdx.graphics.getHeight()/2);
-        parent.getBatch().end();
-
-        if (Gdx.input.justTouched()) {
-            int x = Gdx.input.getX();
-            int y = Gdx.input.getY();
-            if (getRectangleNewGame().contains(x, y))
-            {
-                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.GAME);
-                dispose();
-            } else if (getRectangleQuitGame().contains(x, y))
-            {
-                dispose();
-                Gdx.app.exit();
-            }
-        }
+        update(delta);
+        batch.begin();
+        batch.draw(textureRegionBackground, 0, 0);
+        font96.draw(batch, "Tanks Game", 0, 320, 1280, 1, false);
+        batch.end();
+        stage.draw();
     }
 
-    private Rectangle getRectangleNewGame()
-    {
-        return new Rectangle(Gdx.graphics.getWidth()/2-100, Gdx.graphics.getHeight()/2 - 100, 200, 50);
-    }
-
-    private Rectangle getRectangleQuitGame()
-    {
-        return new Rectangle(Gdx.graphics.getWidth()/2-5, Gdx.graphics.getHeight()/2, 100, 50);
+    public void update(float dt) {
+        stage.act(dt);
     }
 
     @Override
     public void resize(int width, int height) {
-
+        ScreenManager.getInstance().onResize(width, height);
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-
+        skin.dispose();
+        stage.dispose();
     }
 }
