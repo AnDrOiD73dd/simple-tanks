@@ -1,6 +1,7 @@
 package com.tanks.game;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,11 +26,16 @@ public class GameScreen implements Screen {
     private List<Tank> players;
     private int currentPlayerIndex;
     private BitmapFont font12;
+    private BitmapFont font32;
+    private BitmapFont font24Damage;
 
     private Stage stage;
     private Skin skin;
     private Group playerJoystick;
-    private BitmapFont font32;
+
+    private boolean damageIsShowing = false;
+    private String lastDamage;
+    private Vector2 damagePosition;
 
     public List<Tank> getPlayers() {
         return players;
@@ -62,6 +68,9 @@ public class GameScreen implements Screen {
             return;
         }
         if (!bulletEmitter.empty()) {
+            return;
+        }
+        if (damageIsShowing) {
             return;
         }
         do {
@@ -205,7 +214,6 @@ public class GameScreen implements Screen {
 
     public void update(float dt) {
         playerJoystick.setVisible(getCurrentTank() instanceof PlayerTank);
-
         stage.act(dt);
         map.update(dt);
         for (int i = 0; i < players.size(); i++) {
@@ -213,8 +221,21 @@ public class GameScreen implements Screen {
         }
         bulletEmitter.update(dt);
         checkCollisions();
+        checkShowDamage();
         checkNextTurn();
         bulletEmitter.checkPool();
+    }
+
+    private void checkShowDamage() {
+        if (damageIsShowing) {
+            float scaleX = font24Damage.getScaleX();
+            scaleX += 0.03f;
+            if (scaleX >= 1.0f) {
+                damageIsShowing = false;
+                return;
+            }
+            font24Damage.getData().setScale(scaleX);
+        }
     }
 
     public void checkCollisions() {
@@ -223,8 +244,14 @@ public class GameScreen implements Screen {
             for (int j = 0; j < players.size(); j++) {
                 if (b.get(i).isArmed() && players.get(j).getHitArea().contains(b.get(i).getPosition())) {
                     b.get(i).deactivate();
-                    players.get(j).takeDamage(5);
+                    int damage = 5;
+                    players.get(j).takeDamage(damage);
                     map.clearGround(b.get(i).getPosition().x, b.get(i).getPosition().y, 8);
+                    // Show damage
+                    lastDamage = String.valueOf(damage * -1);
+                    damageIsShowing = true;
+                    damagePosition = players.get(j).weaponPosition;
+                    font24Damage.getData().setScale(0.1f);
                     continue;
                 }
             }
@@ -261,6 +288,8 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         font12 = Assets.getInstance().getAssetManager().get("zorque12.ttf", BitmapFont.class);
+        font24Damage = Assets.getInstance().getAssetManager().get("zorque24.ttf", BitmapFont.class);
+        font24Damage.setColor(Color.YELLOW);
         font32 = Assets.getInstance().getAssetManager().get("zorque32.ttf", BitmapFont.class);
         textureBackground = Assets.getInstance().getAtlas().findRegion("background");
         map = new Map();
@@ -345,6 +374,10 @@ public class GameScreen implements Screen {
         bulletEmitter.render(batch);
         for (int i = 0; i < players.size(); i++) {
             players.get(i).renderHUD(batch, font12);
+        }
+        // Draw damage
+        if (damageIsShowing) {
+            font24Damage.draw(batch, lastDamage, damagePosition.x, damagePosition.y);
         }
         batch.end();
 //        shapeRenderer.begin();
