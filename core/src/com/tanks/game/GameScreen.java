@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.ArrayList;
@@ -27,15 +26,17 @@ public class GameScreen implements Screen {
     private int currentPlayerIndex;
     private BitmapFont font12;
     private BitmapFont font32;
-    private BitmapFont font24Damage;
+    private BitmapFont damageFont24;
 
     private Stage stage;
     private Skin skin;
     private Group playerJoystick;
 
     private boolean damageIsShowing = false;
-    private String lastDamage;
+    private String damageValue;
     private Vector2 damagePosition;
+    private int damagedPlayer;
+    private int damageMoveIndex;
 
     public List<Tank> getPlayers() {
         return players;
@@ -228,13 +229,13 @@ public class GameScreen implements Screen {
 
     private void checkShowDamage() {
         if (damageIsShowing) {
-            float scaleX = font24Damage.getScaleX();
+            float scaleX = damageFont24.getScaleX();
             scaleX += 0.03f;
             if (scaleX >= 1.0f) {
                 damageIsShowing = false;
                 return;
             }
-            font24Damage.getData().setScale(scaleX);
+            damageFont24.getData().setScale(scaleX);
         }
     }
 
@@ -248,10 +249,17 @@ public class GameScreen implements Screen {
                     players.get(j).takeDamage(damage);
                     map.clearGround(b.get(i).getPosition().x, b.get(i).getPosition().y, 8);
                     // Show damage
-                    lastDamage = String.valueOf(damage * -1);
                     damageIsShowing = true;
+                    damagedPlayer = j;
+                    damageValue = String.valueOf(damage * -1);
                     damagePosition = players.get(j).weaponPosition;
-                    font24Damage.getData().setScale(0.1f);
+                    damageFont24.getData().setScale(0.1f);
+                    Vector2 hitAreaCenter = new Vector2(players.get(j).getHitArea().x, players.get(j).getHitArea().y);
+                    float angle = (new Vector2(b.get(i).getPosition().x, b.get(i).getPosition().y)).sub(hitAreaCenter).angle();
+                    if (angle > 270.0f | angle < 90.0f) {
+                        damageMoveIndex = -1;
+                    } else damageMoveIndex = 1;
+                    System.out.println(angle);
                     continue;
                 }
             }
@@ -288,8 +296,8 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         font12 = Assets.getInstance().getAssetManager().get("zorque12.ttf", BitmapFont.class);
-        font24Damage = Assets.getInstance().getAssetManager().get("zorque24.ttf", BitmapFont.class);
-        font24Damage.setColor(Color.YELLOW);
+        damageFont24 = Assets.getInstance().getAssetManager().get("zorque24.ttf", BitmapFont.class);
+        damageFont24.setColor(Color.YELLOW);
         font32 = Assets.getInstance().getAssetManager().get("zorque32.ttf", BitmapFont.class);
         textureBackground = Assets.getInstance().getAtlas().findRegion("background");
         map = new Map();
@@ -377,7 +385,8 @@ public class GameScreen implements Screen {
         }
         // Draw damage
         if (damageIsShowing) {
-            font24Damage.draw(batch, lastDamage, damagePosition.x, damagePosition.y);
+            damageFont24.draw(batch, damageValue, damagePosition.x, damagePosition.y);
+            players.get(damagedPlayer).move(damageMoveIndex, 10.0f, delta);
         }
         batch.end();
 //        shapeRenderer.begin();

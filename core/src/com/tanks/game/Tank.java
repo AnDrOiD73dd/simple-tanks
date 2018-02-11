@@ -116,6 +116,10 @@ public abstract class Tank {
     }
 
     public void move(int n, float dt) {
+        move(n, speed, dt);
+    }
+
+    public void move(int n, float speed, float dt) {
         if (fuel > 0.0f) {
             float dstX = position.x + speed * dt * n;
             for (int i = 1; i < MAX_MOVEMENT_DY; i++) {
