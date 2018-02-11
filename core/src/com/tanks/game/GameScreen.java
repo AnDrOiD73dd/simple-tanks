@@ -259,7 +259,6 @@ public class GameScreen implements Screen {
                     if (angle > 270.0f | angle < 90.0f) {
                         damageMoveIndex = -1;
                     } else damageMoveIndex = 1;
-                    System.out.println(angle);
                     continue;
                 }
             }
