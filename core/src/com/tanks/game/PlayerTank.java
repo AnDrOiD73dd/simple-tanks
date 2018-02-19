@@ -47,13 +47,13 @@ public class PlayerTank extends Tank {
                 }
             } else {
                 if (power > MINIMAL_POWER) {
-                    float ammoPosX = weaponPosition.x + 12 + 28 * (float) Math.cos(Math.toRadians(turretAngle));
-                    float ammoPosY = weaponPosition.y + 16 + 28 * (float) Math.sin(Math.toRadians(turretAngle));
+                    float ammoPosX = weaponPosition.x + 4 + 28 * (float) Math.cos(Math.toRadians(turretAngle));
+                    float ammoPosY = weaponPosition.y + 6 + 28 * (float) Math.sin(Math.toRadians(turretAngle));
 
                     float ammoVelX = power * (float) Math.cos(Math.toRadians(turretAngle));
                     float ammoVelY = power * (float) Math.sin(Math.toRadians(turretAngle));
 
-                    game.getBulletEmitter().setup(ammoPosX, ammoPosY, ammoVelX, ammoVelY, false, true);
+                    game.getBulletEmitter().setup(BulletEmitter.BulletType.LASER, ammoPosX, ammoPosY, ammoVelX, ammoVelY);
 
                     power = 0.0f;
 

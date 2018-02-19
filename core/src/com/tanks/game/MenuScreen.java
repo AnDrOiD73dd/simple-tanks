@@ -45,7 +45,7 @@ public class MenuScreen implements Screen {
         skin = new Skin(Assets.getInstance().getAtlas());
         Gdx.input.setInputProcessor(stage);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.getDrawable("menuBtn");
+        textButtonStyle.up = skin.getDrawable("btn2");
         textButtonStyle.font = font32;
         skin.add("tbs", textButtonStyle);
 

@@ -1,7 +1,7 @@
 name=MainPack.pack
 filename=MainPack.pack
 input=texturePack
-output=..\core\assets
+output=..\android\assets
 
 alias=true
 alphaThreshold=0
