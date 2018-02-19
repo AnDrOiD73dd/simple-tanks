@@ -8,6 +8,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Tank {
+
+    public final static float TURRET_ROTATION_ANGULAR_SPEED = 90.0f; // скорость поворота турели
+    public final static float MINIMAL_POWER = 100.0f; // минимальная сила выстрела
+    public final static int MAX_MOVEMENT_DY = 10; // максимальная разница в высоте земли при движении
+
     protected TextureRegion textureBase;
     protected TextureRegion textureTurret;
     protected TextureRegion textureTrack;
@@ -17,6 +22,7 @@ public abstract class Tank {
 
     protected Vector2 position;
     protected Vector2 weaponPosition;
+    protected BulletEmitter.BulletType weaponType;
     protected GameScreen game;
     protected float turretAngle;
     protected int hp;
@@ -32,39 +38,11 @@ public abstract class Tank {
 
     protected StringBuilder tmpStrBuilder = new StringBuilder();
 
-    public boolean isMakeTurn() {
-        return makeTurn;
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public void setMakeTurn(boolean makeTurn) {
-        this.makeTurn = makeTurn;
-    }
-
-    public final static float TURRET_ROTATION_ANGULAR_SPEED = 90.0f; // скорость поворота турели
-    public final static float MINIMAL_POWER = 100.0f; // минимальная сила выстрела
-    public final static int MAX_MOVEMENT_DY = 10; // максимальная разница в высоте земли при движении
-
-    public Circle getHitArea() {
-        return hitArea;
-    }
-
-    public boolean isAlive() {
-        return hp > 0;
-    }
-
-    public void takeTurn() {
-        makeTurn = false;
-        fuel = 0.8f;
-    }
-
     public Tank(GameScreen game, Vector2 position) {
         this.game = game;
         this.position = position;
         this.weaponPosition = new Vector2(position).add(0, 0);
+        this.weaponType = BulletEmitter.BulletType.LIGHT_AMMO;
 
         this.textureBase = Assets.getInstance().getAtlas().findRegion("tankBody");
         this.textureTurret = Assets.getInstance().getAtlas().findRegion("tankTurret");
@@ -81,6 +59,35 @@ public abstract class Tank {
         this.speed = 100.0f;
         this.makeTurn = true;
         this.reddish = 0.0f;
+    }
+
+    public boolean isMakeTurn() {
+        return makeTurn;
+    }
+
+    public void setMakeTurn(boolean makeTurn) {
+        this.makeTurn = makeTurn;
+    }
+
+    public void takeTurn() {
+        makeTurn = false;
+        fuel = 0.8f;
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public void setWeaponType(BulletEmitter.BulletType weaponType) {
+        this.weaponType = weaponType;
+    }
+
+    public Circle getHitArea() {
+        return hitArea;
+    }
+
+    public boolean isAlive() {
+        return hp > 0;
     }
 
     public void render(SpriteBatch batch) {

@@ -42,6 +42,12 @@ public class BulletEmitter extends ObjectPool<Bullet> {
             this.groundClearingSize = groundClearingSize;
             this.maxTime = maxTime;
         }
+
+        private static final BulletType[] typeValues = BulletType.values();
+
+        public static BulletType fromInteger(int i) {
+            return typeValues[i];
+        }
     }
 
     private GameScreen game;

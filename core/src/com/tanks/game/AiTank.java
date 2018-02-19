@@ -26,7 +26,6 @@ public class AiTank extends Tank {
             } while (aim == this);
 
             boolean ready = false;
-            BulletEmitter.BulletType currentBulletType = BulletEmitter.BulletType.LIGHT_AMMO;
             do {
                 tmpPower = MathUtils.random(MINIMAL_POWER, maxPower);
                 tmpAngle = MathUtils.random(0, 180.0f);
@@ -37,7 +36,7 @@ public class AiTank extends Tank {
                 float ammoVelX = tmpPower * (float) Math.cos(Math.toRadians(tmpAngle));
                 float ammoVelY = tmpPower * (float) Math.sin(Math.toRadians(tmpAngle));
 
-                Bullet tmpBullet = game.getBulletEmitter().setup(currentBulletType, ammoPosX, ammoPosY, ammoVelX, ammoVelY);
+                Bullet tmpBullet = game.getBulletEmitter().setup(weaponType, ammoPosX, ammoPosY, ammoVelX, ammoVelY);
 
                 do {
                     ready = game.traceCollision(aim, tmpBullet, dt);
@@ -55,7 +54,7 @@ public class AiTank extends Tank {
             float ammoVelX = tmpPower * (float) Math.cos(Math.toRadians(turretAngle));
             float ammoVelY = tmpPower * (float) Math.sin(Math.toRadians(turretAngle));
 
-            game.getBulletEmitter().setup(currentBulletType, ammoPosX, ammoPosY, ammoVelX, ammoVelY);
+            game.getBulletEmitter().setup(weaponType, ammoPosX, ammoPosY, ammoVelX, ammoVelY);
             makeTurn = true;
             power = 0.0f;
         }

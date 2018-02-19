@@ -95,7 +95,12 @@ public class GameScreen implements Screen {
                 currentPlayerIndex = 0;
             }
         } while (!players.get(currentPlayerIndex).isAlive());
-        players.get(currentPlayerIndex).takeTurn();
+        Tank tank = players.get(currentPlayerIndex);
+        tank.takeTurn();
+        if (!(getCurrentTank() instanceof PlayerTank)) {
+            int weaponIndex = MathUtils.random(0, BulletEmitter.BulletType.values().length-1);
+            tank.setWeaponType(BulletEmitter.BulletType.fromInteger(weaponIndex));
+        }
     }
 
     public void createGUI() {
@@ -383,7 +388,7 @@ public class GameScreen implements Screen {
         players = new ArrayList<Tank>();
         gameOver = false;
         paused = false;
-        // players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
+//        players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
         for (int i = 0; i < BOTS_COUNT; i++) {
             Tank tank = new AiTank(this, new Vector2(0, 0));
             players.add(tank);
