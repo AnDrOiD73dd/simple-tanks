@@ -419,7 +419,7 @@ public class GameScreen implements Screen {
         music = Assets.getInstance().getAssetManager().get("MainTheme.wav", Music.class);
         music.setVolume(0.2f);
         music.setLooping(true);
-        // music.play();
+        music.play();
         soundExplosion = Assets.getInstance().getAssetManager().get("explosion.wav", Sound.class);
         InputProcessor ip = new InputProcessor() {
             @Override

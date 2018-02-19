@@ -2,9 +2,6 @@ package com.tanks.game;
 
 import com.badlogic.gdx.math.Vector2;
 
-
-import java.io.BufferedOutputStream;
-
 public class Bullet implements Poolable {
     private BulletEmitter.BulletType type;
     private Vector2 position;
