@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class BulletEmitter extends ObjectPool<Bullet> {
     public enum BulletType {
+        ROCKET(ParticleEmitter.BulletEffectType.FIRE, true, false, 32, 5.0f),
         LIGHT_AMMO(ParticleEmitter.BulletEffectType.FIRE, true, true, 32, 5.0f),
         LASER(ParticleEmitter.BulletEffectType.LASER, false, true, 1, 10.0f);
 
