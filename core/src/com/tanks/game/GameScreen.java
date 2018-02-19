@@ -1,16 +1,17 @@
 package com.tanks.game;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.ArrayList;
@@ -24,19 +25,14 @@ public class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;
     private List<Tank> players;
     private int currentPlayerIndex;
-    private BitmapFont font12;
-    private BitmapFont font32;
-    private BitmapFont damageFont24;
+    private BitmapFont font24;
 
     private Stage stage;
     private Skin skin;
     private Group playerJoystick;
+    private BitmapFont font32;
 
-    private boolean damageIsShowing = false;
-    private String damageValue;
-    private Vector2 damagePosition;
-    private int damagedPlayer;
-    private int damageMoveIndex;
+    private ParticleEmitter particleEmitter;
 
     public List<Tank> getPlayers() {
         return players;
@@ -71,9 +67,6 @@ public class GameScreen implements Screen {
         if (!bulletEmitter.empty()) {
             return;
         }
-        if (damageIsShowing) {
-            return;
-        }
         do {
             currentPlayerIndex++;
             if (currentPlayerIndex >= players.size()) {
@@ -89,7 +82,8 @@ public class GameScreen implements Screen {
         playerJoystick = new Group();
         Gdx.input.setInputProcessor(stage);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.getDrawable("menuBtn");
+        textButtonStyle.up = skin.getDrawable("btn2");
+
         textButtonStyle.font = font32;
         skin.add("tbs", textButtonStyle);
 
@@ -100,11 +94,11 @@ public class GameScreen implements Screen {
         TextButton btnFire = new TextButton("FIRE", skin, "tbs");
 //        TextButton btnExit = new TextButton("EXIT", skin, "tbs");
 
-        btnLeft.setPosition(20, 140);
-        btnRight.setPosition(300, 140);
-        btnUp.setPosition(140, 240);
-        btnDown.setPosition(140, 40);
-        btnFire.setPosition(1000, 140);
+        btnLeft.setPosition(20, 100);
+        btnRight.setPosition(260, 100);
+        btnUp.setPosition(140, 180);
+        btnDown.setPosition(140, 20);
+        btnFire.setPosition(1060, 100);
 
         playerJoystick.addActor(btnLeft);
         playerJoystick.addActor(btnRight);
@@ -212,9 +206,11 @@ public class GameScreen implements Screen {
         });
     }
 
+    Vector2 v2tmp = new Vector2(0, 0);
 
     public void update(float dt) {
         playerJoystick.setVisible(getCurrentTank() instanceof PlayerTank);
+
         stage.act(dt);
         map.update(dt);
         for (int i = 0; i < players.size(); i++) {
@@ -222,43 +218,31 @@ public class GameScreen implements Screen {
         }
         bulletEmitter.update(dt);
         checkCollisions();
-        checkShowDamage();
         checkNextTurn();
         bulletEmitter.checkPool();
-    }
 
-    private void checkShowDamage() {
-        if (damageIsShowing) {
-            float scaleX = damageFont24.getScaleX();
-            scaleX += 0.03f;
-            if (scaleX >= 1.0f) {
-                damageIsShowing = false;
-                return;
-            }
-            damageFont24.getData().setScale(scaleX);
-        }
+        particleEmitter.update(dt);
+        particleEmitter.checkPool();
     }
 
     public void checkCollisions() {
         List<Bullet> b = bulletEmitter.getActiveList();
         for (int i = 0; i < b.size(); i++) {
             for (int j = 0; j < players.size(); j++) {
+                particleEmitter.setup(b.get(i).getPosition().x, b.get(i).getPosition().y, 0, 0, 0.4f, 1.5f, 0.4f, 1, 0.2f, 0, 1, 1, 1f, 0, 0.5f);
+
                 if (b.get(i).isArmed() && players.get(j).getHitArea().contains(b.get(i).getPosition())) {
                     b.get(i).deactivate();
-                    int damage = 5;
-                    players.get(j).takeDamage(damage);
+                    players.get(j).takeDamage(5);
                     map.clearGround(b.get(i).getPosition().x, b.get(i).getPosition().y, 8);
-                    // Show damage
-                    damageIsShowing = true;
-                    damagedPlayer = j;
-                    damageValue = String.valueOf(damage * -1);
-                    damagePosition = players.get(j).weaponPosition;
-                    damageFont24.getData().setScale(0.1f);
-                    Vector2 hitAreaCenter = new Vector2(players.get(j).getHitArea().x, players.get(j).getHitArea().y);
-                    float angle = (new Vector2(b.get(i).getPosition().x, b.get(i).getPosition().y)).sub(hitAreaCenter).angle();
-                    if (angle > 270.0f | angle < 90.0f) {
-                        damageMoveIndex = -1;
-                    } else damageMoveIndex = 1;
+
+                    for (int k = 0; k < 25; k++) {
+                        v2tmp.set(MathUtils.random(-1f, 1f), MathUtils.random(-1f, 1f));
+                        v2tmp.nor();
+                        v2tmp.scl(MathUtils.random(50f, 120f));
+                        v2tmp.mulAdd(b.get(i).getVelocity(), 0.3f);
+                        particleEmitter.setup(b.get(i).getPosition().x, b.get(i).getPosition().y, v2tmp.x, v2tmp.y, 0.4f, 1.8f, 0.4f, 1, 0, 0, 1, 1, 0.6f, 0, 1);
+                    }
                     continue;
                 }
             }
@@ -267,15 +251,28 @@ public class GameScreen implements Screen {
                 map.clearGround(b.get(i).getPosition().x, b.get(i).getPosition().y, 8);
                 continue;
             }
-            if (b.get(i).getPosition().x < 0 || b.get(i).getPosition().x > 1280 || b.get(i).getPosition().y > 720) {
-                b.get(i).deactivate();
+            Bullet bullet = b.get(i);
+            if (bullet.getPosition().x < 0 || bullet.getPosition().x > 1280 || bullet.getPosition().y > 720) {
+                if (!bullet.isBouncing()) {
+                    bullet.deactivate();
+                } else {
+                    if(bullet.getPosition().x < 0 && bullet.getVelocity().x < 0) {
+                        bullet.getVelocity().x *= -1;
+                    }
+                    if(bullet.getPosition().x > 1280 && bullet.getVelocity().x > 0) {
+                        bullet.getVelocity().x *= -1;
+                    }
+                    if(bullet.getPosition().y > 720 && bullet.getVelocity().y > 0) {
+                        bullet.getVelocity().y *= -1;
+                    }
+                }
             }
         }
     }
 
     public boolean traceCollision(Tank aim, Bullet bullet, float dt) {
         if (bullet.isActive()) {
-            bullet.update(dt);
+            bulletEmitter.updateBullet(bullet, dt);
             if (bullet.isArmed() && aim.getHitArea().contains(bullet.getPosition())) {
                 bullet.deactivate();
                 return true;
@@ -285,7 +282,19 @@ public class GameScreen implements Screen {
                 return false;
             }
             if (bullet.getPosition().x < 0 || bullet.getPosition().x > 1280 || bullet.getPosition().y > 720) {
-                bullet.deactivate();
+                if (!bullet.isBouncing()) {
+                    bullet.deactivate();
+                } else {
+                    if(bullet.getPosition().x < 0 && bullet.getVelocity().x < 0) {
+                        bullet.getVelocity().x *= -1;
+                    }
+                    if(bullet.getPosition().x > 1280 && bullet.getVelocity().x > 0) {
+                        bullet.getVelocity().x *= -1;
+                    }
+                    if(bullet.getPosition().y > 720 && bullet.getVelocity().y > 0) {
+                        bullet.getVelocity().y *= -1;
+                    }
+                }
                 return false;
             }
         }
@@ -294,9 +303,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        font12 = Assets.getInstance().getAssetManager().get("zorque12.ttf", BitmapFont.class);
-        damageFont24 = Assets.getInstance().getAssetManager().get("zorque24.ttf", BitmapFont.class);
-        damageFont24.setColor(Color.YELLOW);
+        font24 = Assets.getInstance().getAssetManager().get("zorque24.ttf", BitmapFont.class);
         font32 = Assets.getInstance().getAssetManager().get("zorque32.ttf", BitmapFont.class);
         textureBackground = Assets.getInstance().getAtlas().findRegion("background");
         map = new Map();
@@ -312,6 +319,8 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         createGUI();
+
+        particleEmitter = new ParticleEmitter();
 
         InputProcessor ip = new InputProcessor() {
             @Override
@@ -370,7 +379,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         update(delta);
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(textureBackground, 0, 0);
@@ -378,15 +387,11 @@ public class GameScreen implements Screen {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).render(batch);
         }
-        bulletEmitter.render(batch);
+        // bulletEmitter.render(batch);
         for (int i = 0; i < players.size(); i++) {
-            players.get(i).renderHUD(batch, font12);
+            players.get(i).renderHUD(batch, font24);
         }
-        // Draw damage
-        if (damageIsShowing) {
-            damageFont24.draw(batch, damageValue, damagePosition.x, damagePosition.y);
-            players.get(damagedPlayer).move(damageMoveIndex, 10.0f, delta);
-        }
+        particleEmitter.render(batch);
         batch.end();
 //        shapeRenderer.begin();
 //        for (int i = 0; i < players.size(); i++) {
