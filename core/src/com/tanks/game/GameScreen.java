@@ -318,7 +318,7 @@ public class GameScreen implements Screen {
     Vector2 v2tmp = new Vector2(0, 0);
 
     public void update(float dt) {
-        if (!gameOver && !paused) {
+        if (!paused) {
             playerJoystick.setVisible(getCurrentTank() instanceof PlayerTank);
             playerWeapon.setVisible(getCurrentTank() instanceof PlayerTank);
 
@@ -329,7 +329,8 @@ public class GameScreen implements Screen {
             }
             bulletEmitter.update(dt);
             checkCollisions();
-            checkNextTurn();
+            if (!gameOver)
+                checkNextTurn();
             bulletEmitter.checkPool();
 
             particleEmitter.update(dt);
@@ -441,7 +442,7 @@ public class GameScreen implements Screen {
         players = new ArrayList<Tank>();
         gameOver = false;
         paused = false;
-        players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
+//        players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
         for (int i = 0; i < BOTS_COUNT; i++) {
             Tank tank = new AiTank(this, new Vector2(0, 0));
             players.add(tank);
