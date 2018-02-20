@@ -38,9 +38,51 @@ btn
   orig: 180, 80
   offset: 0, 0
   index: -1
-bars
+weaponRocket2Def
   rotate: false
   xy: 244, 724
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+weaponRocket2Choose
+  rotate: false
+  xy: 244, 806
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+weaponRocket1Def
+  rotate: false
+  xy: 244, 888
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+weaponRocket1Choose
+  rotate: false
+  xy: 326, 724
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+weaponLaserDef
+  rotate: false
+  xy: 326, 806
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+weaponLaserChoose
+  rotate: false
+  xy: 326, 888
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+bars
+  rotate: false
+  xy: 408, 724
   size: 80, 72
   orig: 80, 72
   offset: 0, 0
@@ -52,9 +94,16 @@ tankBody
   orig: 83, 49
   offset: 0, 0
   index: -1
-tankTrack
+hbar
   rotate: false
   xy: 87, 970
+  size: 80, 40
+  orig: 80, 40
+  offset: 0, 0
+  index: -1
+tankTrack
+  rotate: false
+  xy: 244, 970
   size: 74, 35
   orig: 74, 35
   offset: 0, 0

@@ -32,6 +32,7 @@ public class GameScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private Group playerJoystick;
+    private Group playerWeapon;
     private BitmapFont font32;
     private Music music;
     private Sound soundExplosion;
@@ -108,6 +109,7 @@ public class GameScreen implements Screen {
         stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
         skin = new Skin(Assets.getInstance().getAtlas());
         playerJoystick = new Group();
+        playerWeapon = new Group();
         Gdx.input.setInputProcessor(stage);
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -132,6 +134,21 @@ public class GameScreen implements Screen {
         TextButton btnRestart = new TextButton("RESTART", skin, "tbs");
         TextButton btnPause = new TextButton("II", skin, "pauseTbs");
 
+        ImageButton.ImageButtonStyle r1style = new ImageButton.ImageButtonStyle();
+        r1style.up = skin.getDrawable("weaponRocket1Def");
+        r1style.down = skin.getDrawable("weaponRocket1Choose");
+        ImageButton rocket1 = new ImageButton(r1style);
+
+        ImageButton.ImageButtonStyle r2style = new ImageButton.ImageButtonStyle();
+        r2style.up = skin.getDrawable("weaponRocket2Def");
+        r2style.down = skin.getDrawable("weaponRocket2Choose");
+        ImageButton rocket2 = new ImageButton(r2style);
+
+        ImageButton.ImageButtonStyle lStyle = new ImageButton.ImageButtonStyle();
+        lStyle.up = skin.getDrawable("weaponLaserDef");
+        lStyle.down = skin.getDrawable("weaponLaserChoose");
+        ImageButton laser = new ImageButton(lStyle);
+
         btnLeft.setPosition(20, 100);
         btnRight.setPosition(260, 100);
         btnUp.setPosition(140, 180);
@@ -140,6 +157,9 @@ public class GameScreen implements Screen {
         btnExit.setPosition(1060, 600);
         btnRestart.setPosition(880, 600);
         btnPause.setPosition(700, 600);
+        rocket1.setPosition(20, ScreenManager.VIEW_HEIGHT - 100);
+        rocket2.setPosition(110, ScreenManager.VIEW_HEIGHT - 100);
+        laser.setPosition(200, ScreenManager.VIEW_HEIGHT - 100);
 
         playerJoystick.addActor(btnLeft);
         playerJoystick.addActor(btnRight);
@@ -147,11 +167,16 @@ public class GameScreen implements Screen {
         playerJoystick.addActor(btnDown);
         playerJoystick.addActor(btnFire);
 
+        playerWeapon.addActor(rocket1);
+        playerWeapon.addActor(rocket2);
+        playerWeapon.addActor(laser);
+
         stage.addActor(btnExit);
         stage.addActor(btnRestart);
         stage.addActor(btnPause);
 
         stage.addActor(playerJoystick);
+        stage.addActor(playerWeapon);
 
         btnExit.addListener(new ChangeListener() {
             @Override
@@ -270,6 +295,24 @@ public class GameScreen implements Screen {
                 }
             }
         });
+        rocket1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                players.get(currentPlayerIndex).setWeaponType(BulletEmitter.BulletType.ROCKET);
+            }
+        });
+        rocket2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                players.get(currentPlayerIndex).setWeaponType(BulletEmitter.BulletType.LIGHT_AMMO);
+            }
+        });
+        laser.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                players.get(currentPlayerIndex).setWeaponType(BulletEmitter.BulletType.LASER);
+            }
+        });
     }
 
     Vector2 v2tmp = new Vector2(0, 0);
@@ -277,6 +320,7 @@ public class GameScreen implements Screen {
     public void update(float dt) {
         if (!gameOver && !paused) {
             playerJoystick.setVisible(getCurrentTank() instanceof PlayerTank);
+            playerWeapon.setVisible(getCurrentTank() instanceof PlayerTank);
 
             stage.act(dt);
             map.update(dt);
@@ -397,7 +441,7 @@ public class GameScreen implements Screen {
         players = new ArrayList<Tank>();
         gameOver = false;
         paused = false;
-//        players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
+        players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
         for (int i = 0; i < BOTS_COUNT; i++) {
             Tank tank = new AiTank(this, new Vector2(0, 0));
             players.add(tank);
