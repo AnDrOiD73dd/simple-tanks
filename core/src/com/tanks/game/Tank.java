@@ -168,7 +168,7 @@ public abstract class Tank {
     public boolean takeDamage(int dmg) {
         hp -= dmg;
         reddish += 1.0f;
-        game.getInfoSystem().addMessage("-" + dmg, position.x + 20, position.y + 100, FlyingText.Colors.RED);
+        game.getInfoSystem().addMessage("-" + dmg, position.x + 20, position.y + 100, FlyingText.Colors.RED, game.getFont24());
         if (hp <= 0) {
             return true;
         }

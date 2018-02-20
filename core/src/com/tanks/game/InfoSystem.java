@@ -14,20 +14,20 @@ public class InfoSystem {
         }
     }
 
-    public void addMessage(String text, float x, float y, FlyingText.Colors color) {
+    public void addMessage(String text, float x, float y, FlyingText.Colors color, BitmapFont font) {
         for (int i = 0; i < msgs.length; i++) {
             if (!msgs[i].isActive()) {
-                msgs[i].setup(text, x, y - msgCount * 20, color);
+                msgs[i].setup(text, x, y - msgCount * 20, color, font);
                 break;
             }
         }
         msgCount++;
     }
 
-    public void render(SpriteBatch batch, BitmapFont font) {
+    public void render(SpriteBatch batch) {
         for (int i = 0; i < msgs.length; i++) {
             if (msgs[i].isActive()) {
-                msgs[i].render(batch, font);
+                msgs[i].render(batch);
             }
         }
     }

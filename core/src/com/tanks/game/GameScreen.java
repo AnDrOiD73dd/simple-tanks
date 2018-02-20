@@ -27,13 +27,22 @@ public class GameScreen implements Screen {
     private BulletEmitter bulletEmitter;
     private List<Tank> players;
     private int currentPlayerIndex;
+
+    public BitmapFont getFont24() {
+        return font24;
+    }
+
+    public BitmapFont getFont32() {
+        return font32;
+    }
+
     private BitmapFont font24;
+    private BitmapFont font32;
 
     private Stage stage;
     private Skin skin;
     private Group playerJoystick;
     private Group playerWeapon;
-    private BitmapFont font32;
     private Music music;
     private Sound soundExplosion;
 
@@ -83,6 +92,10 @@ public class GameScreen implements Screen {
     public void checkNextTurn() {
         if (players.size() == 1) {
             gameOver = true;
+            if (getCurrentTank() instanceof PlayerTank) {
+                getInfoSystem().addMessage("YOU ARE WIN!", ScreenManager.VIEW_WIDTH / 2 - 100, ScreenManager.VIEW_HEIGHT / 2, FlyingText.Colors.WHITE, font32);
+            }
+            else getInfoSystem().addMessage("Player " + currentPlayerIndex + 1 + " WIN", ScreenManager.VIEW_WIDTH / 2 - 100, ScreenManager.VIEW_HEIGHT / 2, FlyingText.Colors.WHITE, font32);
             return;
         }
         if (!players.get(currentPlayerIndex).makeTurn) {
@@ -319,6 +332,7 @@ public class GameScreen implements Screen {
 
     public void update(float dt) {
         if (!paused) {
+            music.play();
             playerJoystick.setVisible(getCurrentTank() instanceof PlayerTank);
             playerWeapon.setVisible(getCurrentTank() instanceof PlayerTank);
 
@@ -336,7 +350,7 @@ public class GameScreen implements Screen {
             particleEmitter.update(dt);
             particleEmitter.checkPool();
             infoSystem.update(dt);
-        }
+        } else music.pause();
     }
 
     public void checkCollisions() {
@@ -442,7 +456,7 @@ public class GameScreen implements Screen {
         players = new ArrayList<Tank>();
         gameOver = false;
         paused = false;
-//        players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
+        players.add(new PlayerTank(this, new Vector2(120, map.getHeightInX(400))));
         for (int i = 0; i < BOTS_COUNT; i++) {
             Tank tank = new AiTank(this, new Vector2(0, 0));
             players.add(tank);
@@ -478,7 +492,6 @@ public class GameScreen implements Screen {
         music = Assets.getInstance().getAssetManager().get("MainTheme.wav", Music.class);
         music.setVolume(0.2f);
         music.setLooping(true);
-        music.play();
         soundExplosion = Assets.getInstance().getAssetManager().get("explosion.wav", Sound.class);
         InputProcessor ip = new InputProcessor() {
             @Override
@@ -549,7 +562,7 @@ public class GameScreen implements Screen {
             players.get(i).renderHUD(batch, font24);
         }
         particleEmitter.render(batch);
-        infoSystem.render(batch, font24);
+        infoSystem.render(batch);
         batch.end();
         stage.draw();
     }

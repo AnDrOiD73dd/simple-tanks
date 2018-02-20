@@ -24,6 +24,7 @@ public class FlyingText {
     private float time;
     private boolean active;
     private Colors color;
+    private BitmapFont font;
 
     public boolean isActive() {
         return active;
@@ -36,14 +37,15 @@ public class FlyingText {
         this.color = Colors.WHITE;
     }
 
-    public void setup(String text, float x, float y, Colors color) {
+    public void setup(String text, float x, float y, Colors color, BitmapFont font) {
         this.active = true;
         this.position.set(x, y);
         this.text = text;
         this.color = color;
+        this.font = font;
     }
 
-    public void render(SpriteBatch batch, BitmapFont font) {
+    public void render(SpriteBatch batch) {
         font.setColor(color.r, color.g, color.b, 1.0f - time / 2.0f);
         font.draw(batch, text, position.x, position.y);
         font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
