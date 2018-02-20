@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -108,11 +109,19 @@ public class GameScreen implements Screen {
         skin = new Skin(Assets.getInstance().getAtlas());
         playerJoystick = new Group();
         Gdx.input.setInputProcessor(stage);
+
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = skin.getDrawable("btn2");
 
+        TextButton.TextButtonStyle pauseStyle = new TextButton.TextButtonStyle();
+        pauseStyle.up = skin.getDrawable("btn2");
+        pauseStyle.checked = skin.getDrawable("btn");
+
         textButtonStyle.font = font32;
+        pauseStyle.font = font32;
+
         skin.add("tbs", textButtonStyle);
+        skin.add("pauseTbs", pauseStyle);
 
         TextButton btnLeft = new TextButton("LEFT", skin, "tbs");
         TextButton btnRight = new TextButton("RIGHT", skin, "tbs");
@@ -121,7 +130,7 @@ public class GameScreen implements Screen {
         TextButton btnFire = new TextButton("FIRE", skin, "tbs");
         TextButton btnExit = new TextButton("EXIT", skin, "tbs");
         TextButton btnRestart = new TextButton("RESTART", skin, "tbs");
-        TextButton btnPause = new TextButton("II", skin, "tbs");
+        TextButton btnPause = new TextButton("II", skin, "pauseTbs");
 
         btnLeft.setPosition(20, 100);
         btnRight.setPosition(260, 100);
